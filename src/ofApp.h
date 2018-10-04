@@ -24,5 +24,5 @@ public:
 
 private:
 	ofxAbletonLink link;
-
+	vector<ofImage> images;
 };

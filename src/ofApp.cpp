@@ -3,6 +3,14 @@
 //--------------------------------------------------------------
 void ofApp::setup() {
 	link.setup(120);
+
+	for (int i = 1; i <= 12; i++) {
+		std::ostringstream sout;
+		sout << "monster" << std::setfill('0') << std::setw(2) << i << ".png";
+		ofImage image;
+		image.load(sout.str());
+		images.push_back(image);
+	}
 }
 
 //--------------------------------------------------------------
@@ -16,26 +24,13 @@ void ofApp::draw() {
 
 	// visualize the current status
 	int quantum = (int)ceil(link.quantum());
-	int nbeat;
-	float dw;
-	if (quantum < 1) {
-		dw = (float)ofGetWidth();
-		nbeat = 0;
-	}
-	else {
-		dw = (float)ofGetWidth() / (float)quantum;
-		nbeat = (int)floor(status.beat) % quantum;
-	}
-	int top = (int)(ofGetHeight() * 0.3);
-	int bottom = (int)(ofGetHeight() * 0.7);
-	int h = bottom - top + 1;
-	for (int i = 0; i < quantum; i++) {
-		ofFill();
-		ofSetColor((i <= nbeat) ? 255 : 128);
-		ofDrawRectangle(i * dw, top, dw, h);
-		ofNoFill();
-		ofSetColor(0);
-		ofDrawRectangle(i * dw, top, dw, h);
+	if (quantum >= 1) {
+		int nbeat = (int)floor(status.beat) % quantum;
+		ofSetColor(255);
+		for (int i = 0; i < quantum; i++) {
+			ofImage& image = images[nbeat % images.size()];
+			image.draw((ofGetWidth() - image.getWidth()) / 2, (ofGetHeight() - image.getHeight()) / 2);
+		}
 	}
 
 	ofSetColor(0);
